@@ -11,8 +11,6 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
-
-	"github.com/axgle/mahonia"
 )
 
 var palette = []color.Color{color.White, color.Black}
@@ -23,10 +21,6 @@ const (
 )
 
 func main() {
-	enc := mahonia.NewEncoder("gbk")
-	bodyStr := enc.ConvertString("\xC1\xCE\xA6")
-	fmt.Println(bodyStr)
-	return
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
@@ -40,11 +34,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	c := r.Form.Get("cycles")
 	cycles, _ := strconv.ParseFloat(c, 10)
 	lissajous(w, cycles)
-
 }
 
 func lissajous(out io.Writer, cycles float64) {
-
 	const (
 		defaultCycles = 5
 		res           = 0.001 // angular resolution
