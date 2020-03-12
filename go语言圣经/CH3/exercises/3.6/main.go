@@ -1,5 +1,5 @@
 // 练习 3.6： 升采样技术可以降低每个像素对计算颜色值和平均值的影响。简单的方法是将每个像素分成四个子像素，实现它。
-// TODO:说实话，我没懂，参考了https://blog.csdn.net/q1576962841/article/details/86084461这篇文章
+// 参考了https://blog.csdn.net/q1576962841/article/details/86084461这篇文章
 
 package main
 
