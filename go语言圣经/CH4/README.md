@@ -49,3 +49,73 @@ fmt.Println(RMB, symbol[RMB]) // 3 ￥
 在数组作为函数实参时候，Go语言默认是传递的数组的副本，而不是数组的指针；
 虽然可以显式的传递一个数组的指针，但是数组类型长度的限制，使用数组依然不方便。
 除非明确的知道要处理特定大小数组(比如示例sha256)。大部分会使用slice代替数组；
+
+## 4.2 切片
+
+创建切片
+    * 字面量声明：`s1 := []int{0, 1, 2, 3, 4, 5}`或者`var s []int`
+    * 可以用`make`函数创建一个指定元素类型、长度和容量的slice，`make([]T, len, cap)`，容量可以省略，这时候容量等于长度
+    * slice的切片操作
+    * 数组切片操作
+
+切片： 变长(没有固定长度)；每个元素都相同； `[]T`
+切片三部分构成：指针、长度、容量
+    * 指针：指向`第一个slice元素`对应的`底层数组元素的地址`
+    * 长度：slice中的元素数据，len(s)
+    * 容量：从slice开始位置到底层数组的结尾位置，cap(s)
+slice的切片操作`s[i:j]`,返回一个新的slice，和原slice共享底层数组
+使用`len(s) == 0`判断slice是否为空
+
+示例： `code/rev/main.go`
+
+slice不能进行比较，数组可以；
+slice不直接支持比较运算符是因为
+    * slice元素是间接引用的，一个slice甚至可以包含自身
+    * slice不同时刻可能包含不同元素，因为底层数组的元素可能被修改
+
+特例:
+    * `[]byte`类型slice，可以通过`bytes.Equal`函数进行比较是否相等；
+    * slice的零值是`nil`，因此slice可以和nil比较;
+
+其他类型slice可以自定义比较函数，比如
+```
+func equal(x, y []string) bool {
+    if len(x) != len(y) {
+        return false
+    }
+    for i := range x {
+        if x[i] != y[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+### ４.2.1 append函数
+
+内置的append函数用于向slice追加元素
+```
+var runes []rune
+for _, r := range "Hello, 世界" {
+    runes = append(runes, r)
+}
+fmt.Printf("%q\n", runes) // ['H' 'e' 'l' 'l' 'o' ',' ' ' '世' '界']
+```
+示例：`code/append`
+
+### 4.2.2 Slice内存技巧
+
+示例：`code/nonempty`
+slice模拟stack：`code/slicestack`
+
+### 关于copy函数
+`copy(dst, src)`,将src切片复制到dst切片，替换dst相应位置元素；如果两个数组切片不一样大，按照较小的个数进行复制
+
+```
+s1 := []int{1, 2, 3, 4, 5} 
+s2 := []int{5, 4, 3} 
+
+copy(s2, s1) // 只会复制 s1 的前3个元素到 s2 中 
+copy(s1, s2) // 只会复制 s2 的3个元素到 s1 的前3个位置
+```
