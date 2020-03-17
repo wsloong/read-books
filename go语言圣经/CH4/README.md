@@ -120,3 +120,95 @@ s2 := []int{5, 4, 3}
 copy(s2, s1) // 只会复制 s1 的前3个元素到 s2 中 
 copy(s1, s2) // 只会复制 s2 的3个元素到 s1 的前3个位置
 ```
+
+## 4.3 Map
+
+Map上一个`无序`的`key/value`对的集合，所有的`key`都是不同的；
+Map通过`key`检索、更新或删除对应的`value`都是常数时间复杂度的；
+Map中所有的key、value都有着相同的类型，key和value之间可以不同；
+Map中`key`必须支持`==`比较运算符(浮点数不适合);
+Map的元素通过`key`对应的下标语法访问和赋值；
+删除Map中的元素使用`delete`函数：`delete(ages, "charlie")`;
+
+Map的创建：
+    * `make`函数：`ages := make(map[string]int)`
+    * 字面量方式创建：`args := map[string]int{"alice": 31, "charlie": 34}`
+    * 创建`nil`Map：`var args map[string]int`; 创建nil值的map`args`存入元素将会`panic`；但是查找、删除、len和range循环都是安全的；
+```
+	var m map[string]int        // nil值map
+    fmt.Println(m == nil)       // true
+    fmt.Println(len(m) == 0)    // true
+
+    // 因为nil值的map没有引用任何哈希表，这里会没有任何打印
+	for k, v := range m {
+		fmt.Println(k, "=>", v) 
+	}
+
+    // 多返回一个值`ok`来标示key是否存在
+	value, ok := m["hello"]
+	fmt.Println(value, ok)      // 0 false
+	delete(m, "hello")          // 不会panic
+
+    // 重新初始化后才能向map存数据
+    m = make(map[string]int)
+	m["go"] = 1
+	m["python"] = 2
+	m["java"] = 3
+	m["go"]++       // 
+	fmt.Println(m)	// map[go:2 java:3 python:2]
+```
+
+不能对Map的元素取地址操作`_ = &ages["bob"]`：这是因为map可能随着数量的增长而重新分配内存空间，从而导致之前的地址无效；
+Map遍历可以使用`range`(更常用)或者`for i := 0; i < len(m); i++ {...}`；
+Map迭代顺序是不确定的，可以使用下面方法实现：
+```
+import "sort"
+
+keys := make([]string, 0, len(ages))
+for key := range ages {
+    keys = append(keys, key)
+}
+
+// 排序
+sort.String(keys)
+
+for _, key := range keys {
+    fmt.Printf("%s\t%d\n", key, ages[key])
+}
+```
+
+和slice一样，map之间不能进行相等比较，唯一例外是和`nil`进行比起我叫。
+要判断俩个map是否包含相同的key、value。可以通过一个循环实现
+```
+func equal(x, y map[string]int) bool {
+    if len(x) != len(y) {
+        return false
+    }
+    for k, xv := range x {
+        if yv, ok := y[k]; !ok || yv != xv {
+            return false
+        }
+    }
+    return true
+}
+```
+
+示例: `code/dedup`(实现类似set功能)
+
+虽然Map的`key`必须是可比较的，但是通过方法可以不可比较的`key`类型；下面使用`slice`作为key的一些处理示例：
+```
+var m = make(map[string]int)
+
+func k(list []string) string { return fmt.Sprintf("%q", list) }
+
+func add(list []string) { m[k(list)]++ }
+
+func Count(list []string) int { return m[k(list)] }
+```
+
+示例:`code/charcount`(统计输入中每个Unicode码点出现的次数)
+
+示例:`code/graph`(value也可以是一个聚合类型，比附map或者slice)
+
+
+

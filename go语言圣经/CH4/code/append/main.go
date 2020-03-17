@@ -33,4 +33,24 @@ func main() {
 		fmt.Printf("%d cap=%d\t%v\n", i, cap(y), y)
 		x = y
 	}
+
+	var m map[string]int
+
+	for k, v := range m {
+		fmt.Println(k, "=>", v)
+	}
+
+	value, ok := m["hello"]
+	fmt.Println(value, ok)
+	fmt.Println(len(m))
+	delete(m, "hello")
+
+	m = make(map[string]int)
+	m["go"] = 1
+	m["python"] = 2
+	m["java"] = 3
+	m["go"]++
+	fmt.Println(m)	// map[go:2 java:3 python:2]
+	fmt.Println(m["world"])
+
 }
