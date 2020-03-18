@@ -26,4 +26,17 @@ func main() {
 	s := []int{0, 1, 2, 3, 4, 5}
 	s1 := rotate(s, 2)
 	fmt.Println(s1)
+
+	type Employee struct {
+		Name string
+		Age int
+	}
+
+	var dilbert Employee
+	fmt.Println(dilbert)
+	dilbert.Name = "ahah"
+
+	var  employeeOfTheMonth *Employee = &dilbert
+	(*employeeOfTheMonth).Age = 10
+	fmt.Println(*employeeOfTheMonth)
 }

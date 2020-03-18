@@ -210,5 +210,88 @@ func Count(list []string) int { return m[k(list)] }
 
 示例:`code/graph`(value也可以是一个聚合类型，比附map或者slice)
 
+## 4.4 结构体
 
+结构体是一种聚合的数据类型，由零个或多个任意类型的成员聚合成的实体；
+成员可以通过`.`操作符访问或赋值；
+结构体可以对成员取地址，然后通过指针访问或赋值；
+结构体成员通过大小写绝对是否可以导出；
+一个结构体`S`不能包含自身，但是可以包含`*S`指针类型的成员，可以创建递归的数据结构，比如链表和树结构；
+```
+type Employee struct {
+    ID            int
+    Name, Address string    // 相邻成员类型可以合并到一行
+    DoB           time.Time
+    Position      string
+    Salary        int
+    ManagerID     int
+}
 
+// 明了一个Employee类型的变量dilbert;成员值为类型零值
+var dilbert Employee
+
+// 通过点操作对成员赋值
+dilbert.Salary += 5000
+
+// 点操作配合指针一起工作
+var employeeOfTheMonth *Employee = &dilbert
+employeeOfTheMonth.Position += " (proactive team player)"
+// 和上面的语句效果一样
+(*employeeOfTheMonth).ManagerID = 10
+```
+
+示例：`code/treesort`
+
+结构体类型的零值是每个成员都是零值，通常会将零值作为最合理的默认值；`bytes.Buffer`、`sync.Mutex`都是开箱即用的。
+空结构体(没有任何成员)，写作`struct{}`，大小为0。不包含任何信息。
+
+### 4.4.1 结构体字面量
+
+结构体字面值可以指定每个成员的值；
+1，按照结构体成员定义的顺序为每个结构体成员制定一个字面值(不推荐这种，如果后续增加成员还要考虑顺序问题)
+```
+type Point struct{ X, Y int }
+p := Point{1, 2}
+```
+2，以成员名称和相应的值来初始化，可以包含部分或全部成员
+```
+type Point struct{ X, Y int }
+p := Point{X:1, Y:2}
+```
+
+结构体可以作为函数的参数和返回值，较大的结构体考虑效率的话，通常会用指针方式传入和返回；
+如果在函数内部修改结构体成员，必须使用指针；
+Go语言中，所有的函数参数都是值拷贝传入，指针传入也是拷贝指针的值；
+
+### 4.4.2 结构体比较
+
+如果结构体全部成员都是可比较的，那么结构体也是可比较的；
+可比较的结构体类型和其他可比较的类型一样，可以用于map的key；
+```
+type address struct {
+    hostname string
+    port     int
+}
+
+hits := make(map[address]int)
+hits[address{"golang.org", 443}]++
+```
+
+### 4.4.3 结构体嵌入和匿名成员
+Go语言有一个特性让我们只声明一个成员对应的数据类型而不指名成员的名字；这类成员就叫匿名成员。
+匿名成员的数据类型必须是命名的类型或指向一个命名的类型的指针;
+
+示例：`code/embed`
+
+匿名成员也要一个隐式的名字，因此不能同时包含两个类型相同的匿名成员；
+匿名成员也有可见性规则约束(大写可以导出，小写不能导出);
+
+## JSON
+JavaScript对象表示法（JSON）是一种用于发送和接收结构化信息的标准协议;
+`encoding/json`对于JSON的编码和解码都有良好的支持；
+Go语言将结构体转JSON的过程叫编组(marshaling)，使用`json.Marshal()`完成；
+只有导出的结构体成员才能被编码；
+`Tag`关联到该成员的元信息字符串；`omitempty`选项标示当Go语言结构体成员为空或零值是不生成JSON对象；
+编码的逆操作是解码，对应将JSON数据解码为Go语言的数据结构，Go语言中一般叫`unmarshaling`，通过`json.Unmarshal`函数完成
+
+示例：`code/movie`
