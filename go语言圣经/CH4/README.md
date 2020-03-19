@@ -286,7 +286,7 @@ Go语言有一个特性让我们只声明一个成员对应的数据类型而不
 匿名成员也要一个隐式的名字，因此不能同时包含两个类型相同的匿名成员；
 匿名成员也有可见性规则约束(大写可以导出，小写不能导出);
 
-## JSON
+## 4.5 JSON
 JavaScript对象表示法（JSON）是一种用于发送和接收结构化信息的标准协议;
 `encoding/json`对于JSON的编码和解码都有良好的支持；
 Go语言将结构体转JSON的过程叫编组(marshaling)，使用`json.Marshal()`完成；
@@ -295,3 +295,5 @@ Go语言将结构体转JSON的过程叫编组(marshaling)，使用`json.Marshal(
 编码的逆操作是解码，对应将JSON数据解码为Go语言的数据结构，Go语言中一般叫`unmarshaling`，通过`json.Unmarshal`函数完成
 
 示例：`code/movie`
+
+## 4.6 文本和HTML模板
