@@ -11,7 +11,7 @@ type Movie struct {
 	Title string
 	// 该成员以Tag:releaseed名字输出
 	Year int `json:"released"`
-	// omitempty，如果该字段为空或者零值，则输出该成员
+	// omitempty，如果该字段为空或者零值，则不输出该成员
 	Color  bool `json:"color,omitempty"`
 	Actors []string
 }

@@ -18,6 +18,7 @@ func nonempty(strings []string) []string {
 }
 
 // 使用append函数
+// 申请新的内存空间
 func nonempty2(strings []string) []string {
 	out := strings[:0]
 	for _, s := range strings {
