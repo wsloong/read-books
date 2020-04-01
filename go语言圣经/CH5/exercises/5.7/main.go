@@ -59,32 +59,24 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
 }
 
 func startElement(n *html.Node) {
-	if n.Type == html.CommentNode {
-		fmt.Printf("<!--%s--!>\n", n.Data)
-		return
-	}
-
-	var attr string
 	if n.Type == html.ElementNode {
+		var attr string
 		for _, a := range n.Attr {
-			attr += fmt.Sprintf(` %s="%s"`, a.Key, a.Val)
+			attr += " " + a.Key + "=" + "\"" + a.Val + "\" "
 		}
+		fmt.Printf("%*s<%s%s", depth*2, "", n.Data, attr)
 		depth++
 	}
 
-	fmt.Printf("%*s <%s%s\n", depth*2, "", n.Data, attr)
-
 	if n.Type == html.ElementNode && n.FirstChild == nil && n.Data != "script" {
-		attr += "/>\n"
+		fmt.Printf("/>\n")
 	} else if n.Type == html.ElementNode {
-		attr += ">\n"
+		fmt.Printf(">\n")
 	}
-	// fmt.Printf("%*s<%s%s\n", depth*2, "", n.Data, attr)
 
-	// if n.Type == html.TextNode {
-	// 	fmt.Printf("%*s %s\n", depth*2, "", n.Data)
-	// }
-
+	if n.Type == html.TextNode {
+		fmt.Printf("%*s %s\n", depth*2, "", n.Data)
+	}
 }
 
 func endElement(n *html.Node) {
@@ -96,6 +88,6 @@ func endElement(n *html.Node) {
 
 	if n.Type == html.ElementNode {
 		depth--
-		fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
+		fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
 	}
 }

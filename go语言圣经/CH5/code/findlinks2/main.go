@@ -38,7 +38,6 @@ func findLinks(url string) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
 	}
-	fmt.Println(url, ">>>>", doc)
 
 	return visit(nil, doc), nil
 }
