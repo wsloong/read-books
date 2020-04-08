@@ -13,7 +13,6 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 		items := worklist
 		worklist = nil
 		for _, item := range items {
-
 			if !seen[item] {
 				seen[item] = true
 				worklist = append(worklist, f(item)...)
