@@ -6,6 +6,8 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
+	"strings"
 )
 
 type LimitedReader struct {
@@ -35,28 +37,13 @@ func LimitReader(r io.Reader, limit int) io.Reader {
 }
 
 func main() {
-	// reader := strings.NewReader("hello world")
-	// lr := LimitReader(reader, 5)
-	// b := make([]byte, 11)
-	// n, err := lr.Read(b)
-	// if err != nil {
-	// 	fmt.Println("Get a err: ", err)
-	// 	os.Exit(-1)
-	// }
-	// fmt.Println(string(b), n)
-
-	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-	_ = IntSet{}.String()
-	var s IntSet
-
-	var _ fmt.Stringer = s
-	var _ fmt.Stringer = &s
-	fmt.Println(s, &s)
-
-}
-
-type IntSet struct{}
-
-func (i IntSet) String() string {
-	return "3232323232"
+	reader := strings.NewReader("hello world")
+	lr := LimitReader(reader, 5)
+	b := make([]byte, 11)
+	n, err := lr.Read(b)
+	if err != nil {
+		fmt.Println("Get a err: ", err)
+		os.Exit(-1)
+	}
+	fmt.Println(string(b), n)
 }
