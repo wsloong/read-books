@@ -89,7 +89,7 @@ func main() {
 	// fmt.Println(y.String()) // {9 42}
 
 	x.UnionWith(&y)
-	// 这里我改成了打印指针，看看显示效果
+	// 这里我改成了打印指针显示效果
 	// 可以看出编译器自动解指针调用了String()方法
 	fmt.Println(&x)                   // {1 9 42 144}
 	fmt.Println(x.Has(9), x.Has(123)) // true false
