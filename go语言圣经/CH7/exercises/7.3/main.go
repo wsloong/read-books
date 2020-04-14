@@ -1,5 +1,4 @@
 // 练习 7.3： 为在gopl.io/ch4/treesort (§4.4)的*tree类型实现一个String方法去展示tree类型的值序列
-
 // s结构体可以包含*s类型的成员，下面演示了二叉树的排序
 
 package main
@@ -60,10 +59,10 @@ func (t *tree) String() string {
 }
 
 func main() {
-	unsortValues := []int{
+	unsortedValues := []int{
 		1, 9, 7, 3, 5, 23,
 	}
-	t, sortValues := Sort(unsortValues)
+	t, sortValues := Sort(unsortedValues)
 	fmt.Println(t)
 	fmt.Println(sortValues)
 }
