@@ -174,3 +174,33 @@ type error interface {
 ## 7.11 基于类型断言区别错误类型
 
 配合源码`os/errors.go`阅读
+
+## 7.12 通过类型断言询问行为
+使用一个类型断言来知道一个普遍接口类型的值是否满足一个更加具体的接口类型；并且如果满足，它会使用这个更具体接口的行为
+```
+func writeString(w io.Writer, s string) (n int, err error) {
+    // 这里定义了一个接口，判断w是不是满足这个接口的示例，如果是则可以调用该接口的行为WriteString()
+    type stringWriter interface {
+        WriteString(string) (n int, err error)
+    }
+    if sw, ok := w.(stringWriter); ok {
+        return sw.WriteString(s) // avoid a copy
+    }
+    return w.Write([]byte(s)) // allocate temporary copy
+}
+```
+
+## 7.13 类型开关
+```
+// 此新变量x的定义不会和外面块中的x变量冲突。每一个case也会隐式的创建一个单独的语言块
+switch x := x.(type) {
+    case nil: // ...
+    case int, uint: // ...
+    case bool: // ...
+    case string: // ...
+    default: // ...
+}
+```
+
+7.14. 示例: 基于标记的XML解码
+示例:`code/xmlselect`
