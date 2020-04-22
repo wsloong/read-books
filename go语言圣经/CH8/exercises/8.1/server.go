@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-var port = flag.String("p", "8000", "端口号")
+var port = flag.String("port", "8000", "端口号")
+var location = time.Now().Location().String()
 
 func main() {
 	flag.Parse()

@@ -11,35 +11,46 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"net"
 	"os"
-	"sync"
+	"strings"
+	"time"
 )
 
-var wg sync.WaitGroup
+var outputs []string
 
 func main() {
 	for _, addr := range os.Args[1:] {
 		go dialServer(addr)
 	}
 
+	time.Sleep(time.Second * 5)
 }
 
-func dialServer(addr string, serverMap map[string]string) {
-	defer wg.Done()
-	// 拨号创建链接
-	conn, err := net.Dial("tcp", addr)
+func dialServer(addr string) {
+	locationAndAddr := strings.Split(addr, "=")
+	conn, err := net.Dial("tcp", locationAndAddr[1])
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
-	// 将内容读取到标准输出中
-	var b bytes.Buffer
+	handleConnection(locationAndAddr[0], conn)
 
-	_, err = io.Copy(&b, conn)
-	serverMap[addr] = b.String()
+}
+
+// 读取数据
+func handleConnection(location string, conn net.Conn) {
+	for {
+		buf := make([]byte, 1024)
+		_, err := conn.Read(buf)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		content := strings.Replace(string(buf), "\n", "", 1)
+		fmt.Printf("%s\t%s\n", location, content)
+	}
 }
