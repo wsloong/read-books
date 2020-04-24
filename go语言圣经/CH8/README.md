@@ -77,4 +77,21 @@ ch = make(chan int, 3)  // 缓存channel，容量为3
 Go提供单方向channel类型，分别用于只发送(`chan<- T`)和只接收(`<-chan T`)的channel
 双向类型的channel可以转换为单向类型的channel，但是单向类型不能转换为双向类型
 示例`code/pipeline3`
+练习`exercises/8.3`
+
+### 8.4.4 带缓存的Channels
+`ch = make(chan string 3)`创建3个容量的通道。
+如果缓存channel满，发送操作会阻塞；如果缓存channel是空的，接收操作会阻塞。
+`cap()`函数返回channel的容量。
+下面代码，并发想三个站点发送请求，返回最先得到的值
+```
+func mirroredQuery() string {
+    responses := make(chan string, 3)
+    go func() { responses <- request("asia.gopl.io") }()
+    go func() { responses <- request("europe.gopl.io") }()
+    go func() { responses <- request("americas.gopl.io") }()
+    return <-responses // return the quickest response
+}
+```
+示例：`code/cake`
 
