@@ -77,7 +77,6 @@ ch = make(chan int, 3)  // 缓存channel，容量为3
 Go提供单方向channel类型，分别用于只发送(`chan<- T`)和只接收(`<-chan T`)的channel
 双向类型的channel可以转换为单向类型的channel，但是单向类型不能转换为双向类型
 示例`code/pipeline3`
-练习`exercises/8.3`
 
 ### 8.4.4 带缓存的Channels
 `ch = make(chan string 3)`创建3个容量的通道。
@@ -94,4 +93,9 @@ func mirroredQuery() string {
 }
 ```
 示例：`code/cake`
+
+## 8.5 并发的循环
+
+示例`code/thumbmail`(注意体会`makeThumbnails6`)
+练习:`exercises/8.4`
 
