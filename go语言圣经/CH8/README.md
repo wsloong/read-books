@@ -97,5 +97,13 @@ func mirroredQuery() string {
 ## 8.5 并发的循环
 
 示例`code/thumbmail`(注意体会`makeThumbnails6`)
-练习:`exercises/8.4`
+练习:`exercises/8.4`, `exercises/8.5`
+
+## 8.6 示例: 并发的Web爬虫
+`code/crawl`
+
+#### 延伸阅读：用Golang处理每分钟100万份请求
+地址:http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
+**虽然跑起来了，但是不是特别理解，复习时候多看几遍**
+`code/handle_million_requests`
 

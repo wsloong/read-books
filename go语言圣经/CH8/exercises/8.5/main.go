@@ -15,6 +15,7 @@ const (
 	width, height          = 1024, 1024
 )
 
+// TODO 使用该方法，效率上并不比之前的好
 func ManderbrotWithGoroutine() {
 	type pointColor struct {
 		x, y  int
