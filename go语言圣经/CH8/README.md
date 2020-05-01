@@ -8,6 +8,7 @@ Go语言中并发实现
 
 当一个程序启动时候，主函数在一个单独的goroutine中运行，即`main goroutine`；
 新goroutine会用go语句来创建；`go 函数/方法`
+
 ```
 f()     // 调用f();会等待函数返回
 go f()  // 创建一个goroutine执行f();不会阻塞
@@ -107,3 +108,27 @@ func mirroredQuery() string {
 **虽然跑起来了，但是不是特别理解，复习时候多看几遍**
 `code/handle_million_requests`
 
+## 8.7 基于select的多路复用
+select会等待case中有能够执行的case时去执行，case满足才会执行之后的语句，这时候其他通信不会执行。
+`select{}`语句会永远的等待下去。
+select语句中操作nil的channel永远都不会被select到。
+如果多个case同时就绪，select会随机选择一个执行。
+
+```
+select {
+case <-ch1:
+// ...
+case x := <-ch2:
+// ...use x...
+case ch3 <- y:
+// ...
+default:
+// ...
+}
+```
+示例：`code/countdown1`,`code/countdown2`
+练习: `exercises/8.8`
+
+## 8.8  示例: 并发的字典遍历
+
+示例： `code/du1`, `code/du2`, `code/du3`, `code/du4`
