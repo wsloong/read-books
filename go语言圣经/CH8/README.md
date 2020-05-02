@@ -132,3 +132,11 @@ default:
 ## 8.8  示例: 并发的字典遍历
 
 示例： `code/du1`, `code/du2`, `code/du3`, `code/du4`
+
+## 8.9 并发的退出
+示例： `code/du4`, 
+练习: `exercises/8.10`, `exercises/8.11`
+
+## 8.10 示例: 聊天服务
+示例： `code/chat`
+练习: `exercises/8.12`, `exercises/8.13`, `exercises/8.14`, `exercises/8.15`
