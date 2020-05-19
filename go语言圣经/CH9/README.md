@@ -129,4 +129,5 @@ func Icon(name string) image.Image {
 ## 9.6 竞争条件检测
 在`go build`，`go run`或者`go test`命令后面加上`-race`的flag.
 
-
+## 9.7 示例: 并发的非阻塞缓存
+示例 `code/memo1-5`(仔细体会memo5)
