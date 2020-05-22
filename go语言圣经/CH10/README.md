@@ -25,7 +25,4 @@ go list -json hash
 果之间用一个空格分隔：
 go list -f '{{join .Deps " "}}' strconv
 go list -f '{{.ImportPath}} -> {{join .Imports " "}}' compress/...
-
-
-
 ```
