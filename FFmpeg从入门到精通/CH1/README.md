@@ -7,7 +7,6 @@
 * `AVFormat`: 封装和解封装，`MP4`,`FLY`,`KV`,`TS`等文件封装格式，`RTMP`,`RTSP`, `MMS`,`HLS`等网络协议封装格式
 * `AVCodec`: 编码和解码，支持`MPEG4`, `AAC`, `MJPEG`等，还支持第三方的编码，如`H.264`(需要x264编码器)， `H.265`(需要x265编码器)，`MP3(mp3lame)`(需要libmp3lame编码器)
 * `AVFilter`: 通用的音频、视频、字幕等滤镜处理框架，滤镜框架可以有多个输入和多个输出。
-![CH1-01](../images/CH1-01.png)
 
 ```
 ./ffmpeg -i INPUT -vf "split[main][tmp];[tmp]crop=iw:ih/2:0:0,vflip[flip];[main][flip]overlay=O:H/2" OUTPUT
@@ -17,13 +16,13 @@
 split 路径将分割后的视频流的第二部分打上标签[tmp],通过 crop 滤镜对该部分进行处理，然后进行纵坐标调整操作，打上新标签[flip]。然后将 [main] 和 [flip]标签进行合并
 
 规则：
-1. 相同的 Filter 线性链之间用逗号隔开
-2. 不同的 Filter 线性链之间用分号隔开
-3. 线性链汇合时通过 [] 括起来的标签进行标示
+    1. 相同的 Filter 线性链之间用逗号隔开
+    2. 不同的 Filter 线性链之间用分号隔开
+    3. 线性链汇合时通过 [] 括起来的标签进行标示
 ```
 
-`ffplay`: `FFmpeg`的播放器
-`ffprobe`: `FFmpeg` 的多媒体分析器
+* `ffplay`: `FFmpeg`的播放器
+* `ffprobe`: `FFmpeg` 的多媒体分析器
 
 ### FFmpeg 安装
 
@@ -71,14 +70,14 @@ NOTE: 不使用 ffplay和x11grab； 可以省略依赖：libsdl2-dev libva-dev l
 如果仓库中 nasm 版本 >= 2.13: sudo apt-get install nasm
 
 否则：
-    cd ~/ffmpeg/ffmpeg_sources && \
-    wget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2 && \
-    tar xjvf nasm-2.14.02.tar.bz2 && \
-    cd nasm-2.14.02 && \
-    ./autogen.sh && \
-    PATH="$HOME/ffmpeg/bin:$PATH" ./configure --prefix="$HOME/ffmpeg/ffmpeg_build" --bindir="$HOME/ffmpeg/bin" && \
-    make && \
-    make install
+cd ~/ffmpeg/ffmpeg_sources && \
+wget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2 && \
+tar xjvf nasm-2.14.02.tar.bz2 && \
+cd nasm-2.14.02 && \
+./autogen.sh && \
+PATH="$HOME/ffmpeg/bin:$PATH" ./configure --prefix="$HOME/ffmpeg/ffmpeg_build" --bindir="$HOME/ffmpeg/bin" && \
+make && \
+make install
 ```
 
 * libx264
@@ -89,12 +88,12 @@ NOTE: 不使用 ffplay和x11grab； 可以省略依赖：libsdl2-dev libva-dev l
 如果仓库中 libx264-dev 版本 >= 118: sudo apt-get install libx264-dev
 
 否则：
-    cd ~/ffmpeg/ffmpeg_sources && \
-    git -C x264 pull 2> /dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
-    cd x264 && \
-    PATH="$HOME/ffmpeg/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg/ffmpeg_build" --bindir="$HOME/ffmpeg/bin" --enable-static --enable-pic && \
-    PATH="$HOME/bin:$PATH" make && \
-    sudo make install
+cd ~/ffmpeg/ffmpeg_sources && \
+git -C x264 pull 2> /dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
+cd x264 && \
+PATH="$HOME/ffmpeg/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg/ffmpeg_build" --bindir="$HOME/ffmpeg/bin" --enable-static --enable-pic && \
+PATH="$HOME/bin:$PATH" make && \
+sudo make install
 ```
 
 * lib265
@@ -231,6 +230,7 @@ hash -r
     * rm -rf ~/ffmpeg_build ~/ffmpeg_sources ~/bin/{ffmpeg,ffprobe,ffplay,x264,x265,nasm}
     * hash -r
     * 删除之前的安装包`sudo apt-get autoremove autoconf automake build-essential cmake git-core libass-dev libfreetype6-dev libgnutls28-dev libmp3lame-dev libnuma-dev libopus-dev libsdl2-dev libtool libva-dev libvdpau-dev libvorbis-dev libvpx-dev libx264-dev libx265-dev libxcb1-dev libxcb-shm0-dev ibxcb-xfixes0-dev mercurial texinfo wget yasm zlib1g-dev`
-    
-执行以上过程之后的问题： 
+
+执行以上过程之后的问题:
+
     1. `gnutls not found using pkg-config`： `gnuts`是一个`C语言`加密库，不需要去掉即可，也可以单独安装
