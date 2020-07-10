@@ -309,11 +309,128 @@ ffmpeg -re -i input.mp4 -c copy -f hls -hls_time 3 -hls_list_size 0 -method PUT 
 
 |参数|类型|说明|
 |---|---|---|
-||||
-||||
-||||
-||||
-||||
-||||
-||||
-||||
+|reference_stream|字符串|切片参考用的 stream|
+|segment_format|字符串|切片文件格式|
+|segment_format_options|字符串|切片格式的私有操作参数|
+|segment_list|字符串|切片列表主文件名|
+||标签|m3u8 切片的存在形式|
+|segment_list_flags||live|
+|||cache|
+|segment_list_size|整数|列表文件长度|
+|||列表类型|
+|||flat|
+|||csv|
+|segment_list_type||ext|
+|||ffconcat|
+|||m3u8|
+|||hls|
+|segment_atclocktime|布尔|时钟频率生效参数，启动定时切片间隔用|
+|segment_clocktime_offset|时间值|切片时钟偏移|
+|segment_clocktime_wrap_duration|时间值|切片时钟回滚 duration|
+|segment_time|字符串|切片的 duration|
+|segment_time_delta|时间值|用于设置切片变化时间值|
+|segment_times|字符串|设置切片的时间点|
+|segment_frames|字符串|设置切片的帧位置|
+|segment_wrap|整数|列表回滚阔值|
+|segment_list_entry_prefix|字符串|写文件列表时写入每个切片路径的前置路径|
+|segment_start_number|整数|列表中切片的起始基数|
+|strftime|布尔|设置切片名为生成切片的时间点|
+|break_non_keyframes|布尔|忽略关键帧按照时间切片|
+|individual_header_trailer|布尔|默认在每个切片中都写入文件头和文件结束容器|
+|write_header_trailer|布尔|只在第一个文件写人文件头以及在最后一个文件写入文件结束容器|
+|reset_timestamps|布尔|每个切片都重新初始化时间戳|
+|initial_offset|时间值|设置初始化时间戳偏移|
+
+#### 3.4.2 FFmpeg 切片 segment 举例
+
+1. `segment_format` 指定切片文件的格式
+
+`HLS`切片的格式主要为`MPEGTS`格式, `segment`中可以是`MPEGTS`,`MP4`, `FLV`等
+
+```
+ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 test_output-%d.mp4
+```
+
+2. `segment_list` 与 `segment_list_type` 指定切片索引列表
+    * 生成 `ffconcat` 格式索引文件(这种格式常用于虚拟轮播)
+    ```
+    ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_list_type ffconcat -segment_list output.list test_output-%d.mp4
+    ```
+
+    * 生成 `FLAT` 格式索引文件
+    ```
+    ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_list_type flat -segment_list filelist.text test_output-%d.mp4
+    ```
+
+    * 生成 `CSV` 格式索引文件
+    ```
+    ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_list_type csv -segment_list filelist.csv test_output-%d.mp4
+    ```
+
+    * 生成 `M4U8` 格式索引文件
+    ```
+    ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_list_type m3u8 -segment_list filelist.m3u8 test_output-%d.mp4
+    ```
+3. `reset_timestamps` 使用切片时间戳归0
+*每一片的时间戳均归0*
+
+```
+ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -reset_timestamps 1 test_output-%d.mp4
+```
+
+4. `segment_times` 按照时间点剪切
+*按照指定时间长度进行切片*
+下面命令设置切片的时间点为`第3秒`,`第9秒`,`第12秒`, 在这三个时间点进行切片
+
+```
+ffmpeg -re -i input.mp4 -c copy -f segment -segment_format mp4 -segment_times 3,9,12 test_output-%d.mp4
+```
+
+#### 3.4.3 FFmpeg 使用 `ss` 与 `t` 参数进行切片
+`ss`: 进行视频文件的`seek`定位;参数为时间值
+`t`: 传递的也是时间值
+
+1. 使用 `ss` 指定剪切开头部分: 下面命令`seek`到第`10`秒的位置然后封装为`ts`
+```
+ffmpeg -ss 10 -i input.mp4 -c copy output.ts
+```
+
+2. 使用 `t` 指定视频总长度: 下面命令截取视频的前`10`的数据(可以配合`ss`使用达到切割视频某一段)
+```
+ffmpeg -i input.mp4 -c copy -t 10 -copyts output.mp4
+```
+
+3. 使用 `output_ts_offset` 指定输出 `start_time`
+`ss`和`t`可以切割文件,但是不能指定输出文件的`start_time`; 如果需要指定输出文件的`start_time`,而且不希望时间戳归0,可以使用`output_ts_offset`
+```
+ffmpeg -i input.mp4 -c copy -t 10 -output_ts_offset 120 output.mp4
+```
+
+### 3.5 抽取文件的音视频流
+* `-vn`: 忽略视频
+* `-an`: 忽略音频
+
+#### 3.5.1 抽取视频文件中的 AAC 音频流
+```
+ffmpeg -i input.mp4 -vn -acodec copy output.aac
+```
+
+#### 3.5.2 抽取视频文件中 H.264 视频流
+```
+ffmpeg -i input.mp4 -vcodec copy -an output.h264
+```
+
+#### 3.5.3 抽取视频文件中 H.265 视频
+*MP4 中存储的视频数据并不是标准的 annexb 格式,需要将 MP4 的视频存储格式存储为 annexb格式,输出的 HEVC 格式可以直接使用播放器进行观看*
+```
+ffmpeg -i input.mp4 -vcodec copy -an -bsf hevc_mp4toannexb -f hevc output.hevc
+```
+*我用这个例子报错*:
+```
+[hevc_mp4toannexb @ 0x55840310cc40] Codec 'h264' (27) is not supported by the bitstream filter 'hevc_mp4toannexb'. Supported codecs are: hevc (173) 
+Error initializing bitstream filter: hevc_mp4toannexb
+```
+*可以试着使用下面的命令*:
+```
+ffmpeg -i input.mp4 -vcodec hevc -an -f hevc output.hevc
+```
