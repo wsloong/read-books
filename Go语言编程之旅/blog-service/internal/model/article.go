@@ -1,5 +1,13 @@
 package model
 
+import "github.com/wsloong/blog-service/pkg/app"
+
+// 针对 swagger 的注释
+type ArticleSwagger struct {
+	List  []*Article
+	Pager *app.Pager
+}
+
 type Article struct {
 	*Model
 	Title         string `json:"title"`

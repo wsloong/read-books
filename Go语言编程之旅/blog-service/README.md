@@ -2,7 +2,7 @@
 ```
 .
 ├── configs
-├── doc
+├── docs
 ├── global
 ├── go.mod
 ├── go.sum
@@ -19,7 +19,7 @@
 └── third_party
 ```
 * configs: 配置文件
-* doc: 文档集合
+* docs: 文档集合
 * global: 全局变量
 * internal: 内部模块
     * dao: 数据库访问层(Database Access Object)
