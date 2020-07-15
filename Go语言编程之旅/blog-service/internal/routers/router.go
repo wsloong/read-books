@@ -5,12 +5,14 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/wsloong/blog-service/docs"
+	"github.com/wsloong/blog-service/internal/middleware"
 	v1 "github.com/wsloong/blog-service/internal/routers/api/v1"
 )
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(middleware.Translations()) // 注册翻译的中间件
 
 	// swagger 文档的路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -1,6 +1,12 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/wsloong/blog-service/global"
+	"github.com/wsloong/blog-service/internal/service"
+	"github.com/wsloong/blog-service/pkg/app"
+	"github.com/wsloong/blog-service/pkg/errcode"
+)
 
 type Tag struct{}
 
@@ -20,7 +26,18 @@ func (t Tag) Get(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
-func (t Tag) List(c *gin.Context) {}
+func (t Tag) List(c *gin.Context) {
+	param := service.TagListRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if valid == true {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}
 
 // @Summary 新增标签
 // @Produce json
@@ -35,7 +52,7 @@ func (t Tag) Create(c *gin.Context) {}
 
 // @Summary 更新标签
 // @Produce json
-// @Param id path int true "状态ID"
+// @Param id path int true "标签ID"
 // @Param name body string true "标签名称" minlength(3) maxlength(100)
 // @Param state body int false "状态" Enums(0, 1) default(1)
 // @Param modified_by body string true "修改者" minlength(3) maxlength(100)
@@ -47,7 +64,7 @@ func (t Tag) Update(c *gin.Context) {}
 
 // @Summary 删除标签
 // @Produce json
-// @Param id path int true "状态ID"
+// @Param id path int true "标签ID"
 // @Success 200 {string} string "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"

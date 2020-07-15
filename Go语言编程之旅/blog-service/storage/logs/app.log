@@ -1,0 +1,8 @@
+2020/07/15 17:27:41 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: State必须是[0 1]中的一个","time":1594805261036392419}
+2020/07/15 17:27:56 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: State必须是[0 1]中的一个","time":1594805276008855608}
+2020/07/15 17:27:59 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: State必须是[0 1]中的一个","time":1594805279164308862}
+2020/07/15 17:28:49 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1594805329205875145}
+2020/07/15 17:28:53 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1594805333173723893}
+2020/07/15 17:30:35 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1594805435782510617}
+2020/07/15 17:30:36 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1594805436762872076}
+2020/07/15 17:30:37 {"callers":["/home/wsl/program/github.com/wsloong/read-books/Go语言编程之旅/blog-service/main.go: 27 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1594805437236047452}
