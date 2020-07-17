@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ef43b000-3c90-4af9-ab0c-b386c8a0ae39" name="Default Changelist" comment="" />
+    <list default="true" id="ef43b000-3c90-4af9-ab0c-b386c8a0ae39" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/internal/dao/dao.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/dao/tag.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/model/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/model/model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/model/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/model/tag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/tag.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +23,9 @@
     </option>
   </component>
   <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
@@ -48,5 +59,9 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2384" y="174" key="SettingsEditor/0.0.1920.1055/1920.0.1920.1080@1920.0.1920.1080" timestamp="1594368181376" />
+    <state x="2546" y="259" width="667" height="560" key="find.popup" timestamp="1594973991071">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2546" y="259" width="667" height="560" key="find.popup/0.0.1920.1055/1920.0.1920.1080@1920.0.1920.1080" timestamp="1594973991071" />
   </component>
 </project>

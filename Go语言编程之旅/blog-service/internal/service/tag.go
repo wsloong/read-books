@@ -2,7 +2,8 @@
 package service
 
 type CountTagRequest struct {
-	State uint8 `form:"state,default=1" binding:"oneof=0 1"`
+	Name  string `form:"name" binding:"max=100"`
+	State uint8  `form:"state,default=1" binding:"oneof=0 1"`
 }
 
 type TagListRequest struct {
