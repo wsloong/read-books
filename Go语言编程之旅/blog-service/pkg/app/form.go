@@ -33,22 +33,24 @@ func (v ValidErrors) Errors() []string {
 
 func BindAndValid(c *gin.Context, v interface{}) (bool, ValidErrors) {
 	if err := c.ShouldBind(v); err != nil {
-		v := c.Value("trans") // 获取中间件注册的翻译器
-		trans, _ := v.(ut.Translator)
+		var errs ValidErrors
 
+		v := c.Value("trans")
+		trans, _ := v.(ut.Translator)
 		verrs, ok := err.(val.ValidationErrors)
 		if !ok {
-			return true, nil
+			errs = append(errs, &ValidError{Key: "unknown", Message: err.Error()})
+			return false, errs
 		}
 
-		var errs ValidErrors
+		//var errs ValidErrors
 		for key, value := range verrs.Translate(trans) {
 			errs = append(errs, &ValidError{
 				Key:     key,
 				Message: value,
 			})
 		}
-		return true, errs
+		return false, errs
 	}
-	return false, nil
+	return true, nil
 }

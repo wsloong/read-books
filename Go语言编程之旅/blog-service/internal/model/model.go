@@ -11,13 +11,13 @@ import (
 )
 
 type Model struct {
-	ID         uint32    `grom:"primary_key" json:"id"`
-	CreatedBy  string    `json:"created_by"`
-	ModifiedBy string    `json:"modified_by"`
-	CreatedOn  time.Time `json:"created_on"`
-	ModifiedOn time.Time `json:"modified_on"`
-	DeletedOn  time.Time `json:"deleted_on"`
-	IsDel      bool      `json:"is_del"`
+	ID         uint32 `grom:"primary_key" json:"id"`
+	CreatedBy  string `json:"created_by"`
+	ModifiedBy string `json:"modified_by"`
+	CreatedOn  uint32 `json:"created_on"`
+	ModifiedOn uint32 `json:"modified_on"`
+	DeletedOn  uint32 `json:"deleted_on"`
+	IsDel      bool   `json:"is_del"`
 }
 
 func NewDBEngine(dbSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
@@ -51,7 +51,7 @@ func NewDBEngine(dbSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 // 新增行为的回调
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
-		nowTime := time.Now()
+		nowTime := time.Now().Unix()
 		if createTimeField, ok := scope.FieldByName("CreateOn"); ok {
 			if createTimeField.IsBlank {
 				_ = createTimeField.Set(nowTime)
@@ -68,7 +68,7 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 
 func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
-		_ = scope.SetColumn("ModifiedOn", time.Now())
+		_ = scope.SetColumn("ModifiedOn", time.Now().Unix())
 	}
 }
 
@@ -86,7 +86,7 @@ func deleteCallback(scope *gorm.Scope) {
 		// 如果存在执行 UPDATE 操作进行软删除
 		// 否则执行硬删除
 		if !scope.Search.Unscoped && hasDeletedOnField && hasIsDelField {
-			now := time.Now()
+			now := time.Now().Unix()
 			scope.Raw(fmt.Sprintf(
 				"UPDATE %v SET %v=%v, %v=%v%v%v",
 				scope.QuotedTableName(), // 获取表名

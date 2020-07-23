@@ -1,10 +1,13 @@
 package v1
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/wsloong/blog-service/global"
 	"github.com/wsloong/blog-service/internal/service"
 	"github.com/wsloong/blog-service/pkg/app"
+	"github.com/wsloong/blog-service/pkg/convert"
 	"github.com/wsloong/blog-service/pkg/errcode"
 )
 
@@ -30,12 +33,30 @@ func (t Tag) List(c *gin.Context) {
 	param := service.TagListRequest{}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
-	if valid == true {
+	if !valid {
 		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
-	response.ToResponse(gin.H{})
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{
+		Page:     app.GetPage(c),
+		PageSize: app.GetPageSize(c),
+	}
+	totalRows, err := svc.CountTag(&service.CountTagRequest{Name: param.Name, State: param.State})
+	if err != nil {
+		global.Logger.Errorf("svc.CountTag error: %v", err)
+		response.ToErrorResponse(errcode.ErrorCountTag)
+		return
+	}
+
+	tags, err := svc.GetTagList(&param, &pager)
+	if err != nil {
+		global.Logger.Errorf("svc.GetTagList error: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetTagList)
+		return
+	}
+	response.ToResponseList(tags, totalRows)
 	return
 }
 
@@ -48,7 +69,24 @@ func (t Tag) List(c *gin.Context) {
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [post]
-func (t Tag) Create(c *gin.Context) {}
+func (t Tag) Create(c *gin.Context) {
+	param := service.CreateTagRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	if err := svc.CreateTag(&param); err != nil {
+		global.Logger.Errorf("svc.CreateTag error: %v", err)
+		response.ToErrorResponse(errcode.ErrorCreateTag)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}
 
 // @Summary 更新标签
 // @Produce json
@@ -60,7 +98,27 @@ func (t Tag) Create(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags/{id} [put]
-func (t Tag) Update(c *gin.Context) {}
+func (t Tag) Update(c *gin.Context) {
+	param := service.UpdateTagRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
+
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	fmt.Printf(">>>>>%+v\n", param)
+
+	svc := service.New(c.Request.Context())
+	if err := svc.UpdateTag(&param); err != nil {
+		global.Logger.Errorf("svc.UpdateTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorUpdateTag)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}
 
 // @Summary 删除标签
 // @Produce json
@@ -69,4 +127,21 @@ func (t Tag) Update(c *gin.Context) {}
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags/{id} [delete]
-func (t Tag) Delete(c *gin.Context) {}
+func (t Tag) Delete(c *gin.Context) {
+	param := service.DeleteTagRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
+	response := app.NewResponse(c)
+	if valid, errs := app.BindAndValid(c, &param); !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+
+	svc := service.New(c.Request.Context())
+	if err := svc.DeleteTag(&param); err != nil {
+		global.Logger.Errorf("svc.DeleteTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorDeleteTag)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}

@@ -26,7 +26,7 @@ type UpdateArticleRequest struct {
 	Desc          string `form:"desc" binding:"max=255"`
 	CoverImageUrl string `form:"cover_image_url" binding:"max=255"`
 	Content       string `form:"content,default=\"\""`
-	State         uint8  `form:"state" binding:"required,oneof=0 1"`
+	State         uint8  `form:"state" binding:"oneof=0 1"`
 	ModifiedBy    string `form:"modified_by" binding:"required,min=3,max=100"`
 }
 

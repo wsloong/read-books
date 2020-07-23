@@ -43,7 +43,7 @@ func (t Tag) List(db *gorm.DB, pageOffset, pageSize int) ([]*Tag, error) {
 		db = db.Where("name = ?", t.Name)
 	}
 	db = db.Where("state = ?", t.State)
-	if err = db.Where("id_del = ?", 0).Find(&tags).Error; err != nil {
+	if err = db.Where("is_del = ?", 0).Find(&tags).Error; err != nil {
 		return nil, err
 	}
 	return tags, nil
@@ -54,7 +54,7 @@ func (t Tag) Create(db *gorm.DB) error {
 }
 
 func (t Tag) Update(db *gorm.DB, values interface{}) error {
-	return db.Model(&t).Where("id = ? AND is_del = ?", t.ID, 0).Updates(values).Error
+	return db.Model(t).Updates(values).Where("id = ? AND is_del = ?", t.ID, 0).Error
 }
 
 func (t Tag) Delete(db *gorm.DB) error {
