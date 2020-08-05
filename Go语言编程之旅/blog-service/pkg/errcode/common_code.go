@@ -17,4 +17,10 @@ var (
 	ErrorUpdateTag  = NewError(20010003, "更新标签失败")
 	ErrorDeleteTag  = NewError(20010004, "删除标签失败")
 	ErrorCountTag   = NewError(20010005, "统计标签失败")
+
+	ErrorGetArticle    = NewError(30010001, "获取标单个文章失败")
+	ErrorGetArticles   = NewError(30010002, "获取文章列表")
+	ErrorCreateArticle = NewError(30010003, "创建文章失败")
+	ErrorUpdateArticle = NewError(30010004, "更新文章失败")
+	ErrorDeleteArticle = NewError(30010005, "删除文章失败")
 )

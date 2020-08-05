@@ -1,12 +1,24 @@
 // 文章的请求验证
 package service
 
+import (
+	"github.com/wsloong/blog-service/internal/dao"
+	"github.com/wsloong/blog-service/internal/model"
+	"github.com/wsloong/blog-service/pkg/app"
+	"golang.org/x/tools/go/ssa/interp/testdata/src/fmt"
+)
+
+type ArticleRequest struct {
+	ID    uint32 `form:"id" binding:"required"`
+	State uint8  `form:"state,default=1" binding:"oneof=0 1"`
+}
 type CountArticleRequest struct {
 	State uint8  `form:"state,default=1" binding:"oneof=0 1"`
 	Title string `form:"title" binding:"max=100"`
 }
 
 type ArticleListRequest struct {
+	TagID uint32 `form:"tag_id" binding:"required"`
 	Title string `form:"title" binding:"max=100"`
 	State uint8  `form:"state,default=1" binding:"oneof=0 1"`
 }
@@ -18,10 +30,12 @@ type CreateArticleRequest struct {
 	Content       string `form:"content"`
 	CreatedBy     string `form:"created_by" binding:"required,min=3,max=100"`
 	State         uint8  `form:"state,default=1" binding:"oneof=0 1"`
+	TagID         uint32 `form:"tag_id" binding:"required,gte=1"`
 }
 
 type UpdateArticleRequest struct {
 	ID            uint32 `form:"id" binding:"required,gte=1"`
+	TagID         uint32 `form:"id" binding:"required,gte=1"`
 	Title         string `form:"title" binding:"required,min=3,max=100"`
 	Desc          string `form:"desc" binding:"max=255"`
 	CoverImageUrl string `form:"cover_image_url" binding:"max=255"`
@@ -32,4 +46,121 @@ type UpdateArticleRequest struct {
 
 type DeleteArticleRequest struct {
 	ID uint32 `form:"id" binding:"required,gte=1"`
+}
+
+type Article struct {
+	ID            uint32     `json:"id"`
+	Title         string     `json:"title"`
+	Desc          string     `json:"desc"`
+	Content       string     `json:"content"`
+	CoverImageUrl string     `json:"cover_image_url"`
+	State         uint8      `json:"state"`
+	Tag           *model.Tag `json:"tag"`
+}
+
+func (svc *Service) GetArticle(param *ArticleRequest) (*Article, error) {
+	article, err := svc.dao.GetArticle(param.ID, param.State)
+	if err != nil {
+		return nil, err
+	}
+
+	articleTag, err := svc.dao.GetArticleTagByAID(article.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	tag, err := svc.dao.GetTag(articleTag.TagID, model.STATE_OPEN)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Article{
+		ID:            article.ID,
+		Title:         article.Title,
+		Desc:          article.Desc,
+		Content:       article.Content,
+		CoverImageUrl: article.CoverImageUrl,
+		State:         article.State,
+		Tag:           &tag,
+	}, nil
+}
+
+func (svc *Service) GetArticleList(param *ArticleListRequest, pager *app.Pager) ([]*Article, int, error) {
+	articleCount, err := svc.dao.CountArticleListByTagID(param.TagID, param.State)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	articles, err := svc.dao.GetArticleListByTagID(param.TagID, param.State, pager.Page, pager.PageSize)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var articleList []*Article
+	for _, article := range articles {
+		articleList = append(articleList, &Article{
+			ID:            article.ArticleID,
+			Title:         article.ArticleTitle,
+			Desc:          article.ArticleDesc,
+			Content:       article.Content,
+			CoverImageUrl: article.CoverImageUrl,
+			Tag:           &model.Tag{Model: &model.Model{ID: article.TagID}, Name: article.TagName},
+		})
+	}
+	return articleList, articleCount, nil
+}
+
+// fixme: 1，使用事务更好； 2，确定CreateArticle之后 article的ID是否会自动填充
+func (svc *Service) CreateArticle(param *CreateArticleRequest) error {
+	article := &dao.Article{
+		Title:         param.Title,
+		Desc:          param.Desc,
+		Content:       param.Content,
+		CoverImageUrl: param.CoverImageUrl,
+		CreatedBy:     param.CreatedBy,
+		State:         param.State,
+	}
+
+	fmt.Println("********************", article.ID)
+
+	if err := svc.dao.CreateArticle(article); err != nil {
+		return nil
+	}
+
+	if err := svc.dao.CreateArticleTag(article.ID, param.TagID, param.CreatedBy); err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+func (svc *Service) UpdateArticle(param *UpdateArticleRequest) error {
+	if err := svc.dao.UpdateArticle(&dao.Article{
+		ID:            param.ID,
+		Title:         param.Title,
+		Desc:          param.Desc,
+		Content:       param.Content,
+		CoverImageUrl: param.CoverImageUrl,
+		ModifiedBy:    param.ModifiedBy,
+		State:         param.State,
+	}); err != nil {
+		return err
+	}
+
+	if err := svc.dao.UPdateArticleTag(param.ID, param.TagID, param.ModifiedBy); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (svc *Service) DeleteArticle(param *DeleteArticleRequest) error {
+	if err := svc.dao.DeleteArticle(param.ID); err != nil {
+		return err
+	}
+
+	if err := svc.dao.DeleteArticleTag(param.ID); err != nil {
+		return err
+	}
+
+	return nil
 }
