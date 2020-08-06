@@ -2,14 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef43b000-3c90-4af9-ab0c-b386c8a0ae39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/dao/article.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/dao/article_tag.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/dao/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/dao/tag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/dao/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/dao/article.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/model/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/model/article.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/model/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/model/tag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/model/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/model/model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/routers/api/v1/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/api/v1/article.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/service/article.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/article.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/app/form.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/app/form.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/errcode/common_code.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/errcode/common_code.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/storage/logs/app.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,9 +70,9 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2658" y="121" width="434" height="835" key="com.goide.refactor.move.GoMoveDeclarationDialog/0.0.1920.1055/1920.0.1920.1080@1920.0.1920.1080" timestamp="1595581895815" />
-    <state x="2546" y="259" width="667" height="560" key="find.popup" timestamp="1594973991071">
+    <state x="2546" y="259" width="667" height="560" key="find.popup" timestamp="1596706154488">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2546" y="259" width="667" height="560" key="find.popup/0.0.1920.1055/1920.0.1920.1080@1920.0.1920.1080" timestamp="1594973991071" />
+    <state x="2546" y="259" width="667" height="560" key="find.popup/0.0.1920.1055/1920.0.1920.1080@1920.0.1920.1080" timestamp="1596706154488" />
   </component>
 </project>

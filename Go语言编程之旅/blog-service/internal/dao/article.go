@@ -17,7 +17,7 @@ type Article struct {
 	State         uint8  `json:"state"`
 }
 
-func (d *Dao) CreateArticle(param *Article) error {
+func (d *Dao) CreateArticle(param *Article) (*model.Article, error) {
 	article := model.Article{
 		Title:         param.Title,
 		Desc:          param.Desc,

@@ -5,7 +5,6 @@ import (
 	"github.com/wsloong/blog-service/internal/dao"
 	"github.com/wsloong/blog-service/internal/model"
 	"github.com/wsloong/blog-service/pkg/app"
-	"golang.org/x/tools/go/ssa/interp/testdata/src/fmt"
 )
 
 type ArticleRequest struct {
@@ -35,7 +34,7 @@ type CreateArticleRequest struct {
 
 type UpdateArticleRequest struct {
 	ID            uint32 `form:"id" binding:"required,gte=1"`
-	TagID         uint32 `form:"id" binding:"required,gte=1"`
+	TagID         uint32 `form:"tag_id" binding:"required,gte=1"`
 	Title         string `form:"title" binding:"required,min=3,max=100"`
 	Desc          string `form:"desc" binding:"max=255"`
 	CoverImageUrl string `form:"cover_image_url" binding:"max=255"`
@@ -110,20 +109,18 @@ func (svc *Service) GetArticleList(param *ArticleListRequest, pager *app.Pager) 
 	return articleList, articleCount, nil
 }
 
-// fixme: 1，使用事务更好； 2，确定CreateArticle之后 article的ID是否会自动填充
+// fixme: 1，使用事务比较好
 func (svc *Service) CreateArticle(param *CreateArticleRequest) error {
-	article := &dao.Article{
+	article, err := svc.dao.CreateArticle(&dao.Article{
 		Title:         param.Title,
 		Desc:          param.Desc,
 		Content:       param.Content,
 		CoverImageUrl: param.CoverImageUrl,
 		CreatedBy:     param.CreatedBy,
 		State:         param.State,
-	}
+	})
 
-	fmt.Println("********************", article.ID)
-
-	if err := svc.dao.CreateArticle(article); err != nil {
+	if err != nil {
 		return nil
 	}
 

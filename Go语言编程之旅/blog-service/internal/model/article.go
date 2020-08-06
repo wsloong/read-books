@@ -5,6 +5,11 @@ import (
 	"github.com/wsloong/blog-service/pkg/app"
 )
 
+const (
+	STATE_OPEN  = 1
+	STATE_CLOSE = 0
+)
+
 // 针对 swagger 的注释
 type ArticleSwagger struct {
 	List  []*Article
@@ -24,8 +29,11 @@ func (a Article) TableName() string {
 	return "blog_article"
 }
 
-func (a Article) Create(db *gorm.DB) error {
-	return db.Create(&a).Error
+func (a Article) Create(db *gorm.DB) (*Article, error) {
+	if err := db.Create(&a).Error; err != nil {
+		return nil, err
+	}
+	return &a, nil
 }
 
 func (a Article) Update(db *gorm.DB, values interface{}) error {
@@ -65,9 +73,9 @@ func (a Article) ListByTagID(db *gorm.DB, tagID uint32, pageOffset, pageSize int
 		db = db.Offset(pageOffset).Limit(pageSize)
 	}
 
-	rows, err := db.Select(fields).Table(ArticleTag{}.TableName()+"AS at").
+	rows, err := db.Select(fields).Table(ArticleTag{}.TableName()+" AS at").
 		Joins("LEFT JOIN `"+Tag{}.TableName()+"` AS t ON at.tag_id = t.id").
-		Joins("LEFT JOIN `"+Article{}.TableName()+"` AS ar ON ar.article_id = ar.id").
+		Joins("LEFT JOIN `"+Article{}.TableName()+"` AS ar ON at.article_id = ar.id").
 		Where("at.`tag_id` = ? AND ar.state = ? AND ar.is_del = ?", tagID, a.State, 0).Rows()
 	if err != nil {
 		return nil, err
@@ -88,9 +96,9 @@ func (a Article) ListByTagID(db *gorm.DB, tagID uint32, pageOffset, pageSize int
 
 func (a Article) CountByTagID(db *gorm.DB, tagID uint32) (int, error) {
 	var count int
-	err := db.Table(ArticleTag{}.TableName()+"AS at").
+	err := db.Table(ArticleTag{}.TableName()+" AS at").
 		Joins("LEFT JOIN `"+Tag{}.TableName()+"` AS t ON at.tag_id = t.id").
-		Joins("LEFT JOIN `"+Article{}.TableName()+"` AS ar ON ar.article_id = ar.id").
+		Joins("LEFT JOIN `"+Article{}.TableName()+"` AS ar ON at.article_id = ar.id").
 		Where("at.`tag_id` = ? AND ar.state = ? AND ar.is_del = ?", tagID, a.State, 0).Count(&count).Error
 	return count, err
 }
