@@ -9,6 +9,13 @@ App:
   LogSavePath: storage/logs
   LogFileName: app
   LogFileExt: .log
+  UploadSavePath: storage/uploads   #最终保存目录
+  UploadServerUrl: http://127.0.0.1:8000/static   # 用于展示的文件服务地址
+  UploadImageMaxSize: 5 #允许的最大空间大小(MB)
+  UploadImageAllowExts:  # 允许的文件后缀
+    - .jpg
+    - .jpeg
+    - .png
 Database:
   DBType: mysql
   Username: root
@@ -20,3 +27,7 @@ Database:
   ParseTime: True
   MaxIdleConns: 10
   MaxOpenConns: 30
+JWT:
+  Secret: eddycjy     # 令牌密钥(不可暴露到外部，这里是指演示，可以放到环境变量中让程序去读)
+  Issuer: blog-service  # 签发者
+  Expire: 7200   # 有效时间 7200s

@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/wsloong/blog-service/global"
 	"github.com/wsloong/blog-service/internal/service"
@@ -108,7 +106,6 @@ func (t Tag) Update(c *gin.Context) {
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
-	fmt.Printf(">>>>>%+v\n", param)
 
 	svc := service.New(c.Request.Context())
 	if err := svc.UpdateTag(&param); err != nil {
