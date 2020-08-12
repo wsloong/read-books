@@ -2,6 +2,9 @@ package routers
 
 import (
 	"net/http"
+	"time"
+
+	"github.com/wsloong/blog-service/pkg/limiter"
 
 	"github.com/wsloong/blog-service/internal/routers/api"
 
@@ -14,10 +17,26 @@ import (
 	v1 "github.com/wsloong/blog-service/internal/routers/api/v1"
 )
 
+var methodLimiters = limiter.NewMethodLimiter().AddBuckets(
+	limiter.LimiterBucketRule{
+		Key:          "/auth",
+		FillInterval: time.Second,
+		Capacity:     10,
+		Quantum:      10,
+	})
+
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
-	r.Use(middleware.Translations()) // 注册翻译的中间件
+	if global.ServerSetting.RunMode == "debug" {
+		r.Use(gin.Logger())
+		r.Use(gin.Recovery())
+	} else {
+		r.Use(middleware.AccessLog())
+		r.Use(middleware.Recovery())
+	}
+	r.Use(middleware.RageLimiter(methodLimiters))                             // 注册限流中间件
+	r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTimeout)) // 注册超时控制中间件
+	r.Use(middleware.Translations())                                          // 注册翻译的中间件
 
 	// swagger 文档的路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

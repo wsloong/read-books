@@ -6,6 +6,7 @@ Server:
 App:
   DefaultPageSize: 10
   MaxPageSize: 100
+  DefaultContextTimeout: 60   # 请求超时控制，60s
   LogSavePath: storage/logs
   LogFileName: app
   LogFileExt: .log
@@ -31,3 +32,13 @@ JWT:
   Secret: eddycjy     # 令牌密钥(不可暴露到外部，这里是指演示，可以放到环境变量中让程序去读)
   Issuer: blog-service  # 签发者
   Expire: 7200   # 有效时间 7200s
+Email:
+  Host: smtp.qq.com
+  Port: 465   # 不要使用25端口，在一些云服务器上25端口会被禁掉
+  UserName: xxxx@qq.com
+  Password: xxxxxx
+  IsSSL: true
+  From: xxxx@qq.com
+  To:
+    - 1xxx@qq.com
+    - 2xxx@qq.com

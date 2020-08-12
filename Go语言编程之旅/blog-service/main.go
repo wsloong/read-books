@@ -61,11 +61,14 @@ func setupSetting() error {
 	if err = setting.ReadSection("Database", &global.DatabaseSetting); err != nil {
 		return err
 	}
-
+	if err = setting.ReadSection("Email", &global.EmailSetting); err != nil {
+		return err
+	}
 	if err = setting.ReadSection("JWT", &global.JWTSetting); err != nil {
 		return err
 	}
 
+	global.AppSetting.DefaultContextTimeout *= time.Second
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
 	global.JWTSetting.Expire *= time.Second
