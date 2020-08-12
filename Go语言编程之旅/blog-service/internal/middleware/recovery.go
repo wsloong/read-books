@@ -30,7 +30,7 @@ func Recovery() gin.HandlerFunc {
 					global.EmailSetting.To,
 					fmt.Sprintf("异常抛出,发生时间: %d", time.Now().Unix()),
 					fmt.Sprintf("错误信息: %v", err)); err != nil {
-					global.Logger.Panicf(c, "mail.SendMail err: %v", err)
+					global.Logger.Panicf("mail.SendMail err: %v", err)
 				}
 				app.NewResponse(c).ToErrorResponse(errcode.ServerError)
 				c.Abort()

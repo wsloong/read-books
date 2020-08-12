@@ -24,7 +24,7 @@ func NewEmail(info *SMTPInfo) *Email {
 }
 
 func (e *Email) SendMail(to []string, subject, body string) error {
-	m := global.NewMessage()
+	m := gomail.NewMessage()
 	m.SetHeader("From", e.From)
 	m.SetHeader("To", to...)
 	m.SetHeader("Subject", subject)
@@ -32,6 +32,6 @@ func (e *Email) SendMail(to []string, subject, body string) error {
 
 	dialer := gomail.NewDialer(e.Host, e.Port, e.UserName, e.Password)
 	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: e.IsSSL}
-	return dialer.DialAndSend(``)
+	return dialer.DialAndSend(m)
 
 }
