@@ -1,10 +1,15 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"path"
+	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/wsloong/blog-service/pkg/tracer"
 
@@ -17,7 +22,22 @@ import (
 	setting2 "github.com/wsloong/blog-service/pkg/setting"
 )
 
+var (
+	port    string
+	runMode string
+	config  string
+
+	isVersion    bool
+	buildTime    string
+	buildVersion string
+	gitCommitID  string
+)
+
 func init() {
+	if err := setupFlag(); err != nil {
+		log.Fatalf("init.setupFlag err: %v", err)
+	}
+
 	if err := setupSetting(); err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
 	}
@@ -40,6 +60,14 @@ func init() {
 // @description Go 编程之旅： 一起用 Go 做项目
 // @termsOfService https://github.com/go-programming-tour-book
 func main() {
+	gin.SetMode(global.ServerSetting.RunMode)
+	if isVersion {
+		fmt.Printf("build_time: %s\n", buildTime)
+		fmt.Printf("build_version: %s\n", buildVersion)
+		fmt.Printf("git_commit_id: %s\n", gitCommitID)
+		return
+	}
+
 	router := routers.NewRouter()
 	s := &http.Server{
 		Addr:           ":" + global.ServerSetting.HttpPort,
@@ -51,9 +79,19 @@ func main() {
 	s.ListenAndServe()
 }
 
+// 读取命令行参数
+func setupFlag() error {
+	flag.StringVar(&port, "port", "", "启动端口")
+	flag.StringVar(&runMode, "mode", "", "启动模式")
+	flag.StringVar(&config, "config", "configs/", "指定要使用的配置文件路径")
+	flag.BoolVar(&isVersion, "version", false, "编译信息")
+	flag.Parse()
+	return nil
+}
+
 // 初始化配置
 func setupSetting() error {
-	setting, err := setting2.NewSetting()
+	setting, err := setting2.NewSetting(strings.Split(config, ",")...)
 	if err != nil {
 		return err
 	}
@@ -78,6 +116,13 @@ func setupSetting() error {
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
 	global.JWTSetting.Expire *= time.Second
+
+	if port != "" {
+		global.ServerSetting.HttpPort = port
+	}
+	if runMode != "" {
+		global.ServerSetting.RunMode = runMode
+	}
 	return nil
 }
 
