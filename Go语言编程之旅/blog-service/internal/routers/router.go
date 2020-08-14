@@ -34,6 +34,7 @@ func NewRouter() *gin.Engine {
 		r.Use(middleware.AccessLog())
 		r.Use(middleware.Recovery())
 	}
+	r.Use(middleware.Tracing())                                               // 链路追踪的中间件
 	r.Use(middleware.RageLimiter(methodLimiters))                             // 注册限流中间件
 	r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTimeout)) // 注册超时控制中间件
 	r.Use(middleware.Translations())                                          // 注册翻译的中间件

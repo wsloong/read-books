@@ -32,7 +32,7 @@ func (t Tag) List(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
@@ -43,14 +43,14 @@ func (t Tag) List(c *gin.Context) {
 	}
 	totalRows, err := svc.CountTag(&service.CountTagRequest{Name: param.Name, State: param.State})
 	if err != nil {
-		global.Logger.Errorf("svc.CountTag error: %v", err)
+		global.Logger.Errorf(c, "svc.CountTag error: %v", err)
 		response.ToErrorResponse(errcode.ErrorCountTag)
 		return
 	}
 
 	tags, err := svc.GetTagList(&param, &pager)
 	if err != nil {
-		global.Logger.Errorf("svc.GetTagList error: %v", err)
+		global.Logger.Errorf(c, "svc.GetTagList error: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetTagList)
 		return
 	}
@@ -72,13 +72,13 @@ func (t Tag) Create(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
 	svc := service.New(c.Request.Context())
 	if err := svc.CreateTag(&param); err != nil {
-		global.Logger.Errorf("svc.CreateTag error: %v", err)
+		global.Logger.Errorf(c, "svc.CreateTag error: %v", err)
 		response.ToErrorResponse(errcode.ErrorCreateTag)
 		return
 	}
@@ -102,14 +102,14 @@ func (t Tag) Update(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
 
 	svc := service.New(c.Request.Context())
 	if err := svc.UpdateTag(&param); err != nil {
-		global.Logger.Errorf("svc.UpdateTag err: %v", err)
+		global.Logger.Errorf(c, "svc.UpdateTag err: %v", err)
 		response.ToErrorResponse(errcode.ErrorUpdateTag)
 		return
 	}
@@ -128,14 +128,14 @@ func (t Tag) Delete(c *gin.Context) {
 	param := service.DeleteTagRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
 	response := app.NewResponse(c)
 	if valid, errs := app.BindAndValid(c, &param); !valid {
-		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
 
 	svc := service.New(c.Request.Context())
 	if err := svc.DeleteTag(&param); err != nil {
-		global.Logger.Errorf("svc.DeleteTag err: %v", err)
+		global.Logger.Errorf(c, "svc.DeleteTag err: %v", err)
 		response.ToErrorResponse(errcode.ErrorDeleteTag)
 		return
 	}

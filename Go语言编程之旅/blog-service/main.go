@@ -6,6 +6,8 @@ import (
 	"path"
 	"time"
 
+	"github.com/wsloong/blog-service/pkg/tracer"
+
 	"github.com/wsloong/blog-service/pkg/logger"
 	"gopkg.in/natefinch/lumberjack.v2"
 
@@ -25,7 +27,11 @@ func init() {
 	}
 
 	if err := setupLogger(); err != nil {
-		log.Fatalf("init.setupLogger error: %v", err)
+		log.Fatalf("init.setupLogger err: %v", err)
+	}
+
+	if err := setupTracer(); err != nil {
+		log.Fatalf("init.setupTracer err: %v", err)
 	}
 }
 
@@ -94,5 +100,15 @@ func setupLogger() error {
 			LocalTime: true, // 日志文件名的时间格式为本地时间
 		},
 		"", log.LstdFlags).WithCaller(2)
+	return nil
+}
+
+// 初始化链路追踪模块
+func setupTracer() error {
+	jaegerTracer, _, err := tracer.NewJaegerTracer("blog-service", "127.0.0.1:6831")
+	if err != nil {
+		return nil
+	}
+	global.Tracer = jaegerTracer
 	return nil
 }
