@@ -57,6 +57,21 @@ type Article struct {
 	Tag           *model.Tag `json:"tag"`
 }
 
+func (svc *Service) GetArticleByName(title string) (*Article, error) {
+	article, err := svc.dao.GetArticleTitle(title)
+	if err != nil {
+		return nil, err
+	}
+	return &Article{
+		ID:            article.ID,
+		Title:         article.Title,
+		Desc:          article.Desc,
+		Content:       article.Content,
+		CoverImageUrl: article.CoverImageUrl,
+		State:         article.State,
+	}, nil
+}
+
 func (svc *Service) GetArticle(param *ArticleRequest) (*Article, error) {
 	article, err := svc.dao.GetArticle(param.ID, param.State)
 	if err != nil {
@@ -109,9 +124,8 @@ func (svc *Service) GetArticleList(param *ArticleListRequest, pager *app.Pager) 
 	return articleList, articleCount, nil
 }
 
-// fixme: 1，使用事务比较好
 func (svc *Service) CreateArticle(param *CreateArticleRequest) error {
-	article, err := svc.dao.CreateArticle(&dao.Article{
+	return svc.dao.CreateArticle(&dao.Article{
 		Title:         param.Title,
 		Desc:          param.Desc,
 		Content:       param.Content,
@@ -119,16 +133,6 @@ func (svc *Service) CreateArticle(param *CreateArticleRequest) error {
 		CreatedBy:     param.CreatedBy,
 		State:         param.State,
 	})
-
-	if err != nil {
-		return nil
-	}
-
-	if err := svc.dao.CreateArticleTag(article.ID, param.TagID, param.CreatedBy); err != nil {
-		return nil
-	}
-
-	return nil
 }
 
 func (svc *Service) UpdateArticle(param *UpdateArticleRequest) error {

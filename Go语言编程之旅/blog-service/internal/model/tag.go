@@ -43,6 +43,13 @@ func (t Tag) Get(db *gorm.DB) (Tag, error) {
 	return tag, nil
 }
 
+func (t Tag) GetTagByName(db *gorm.DB) (Tag, error) {
+	var tag Tag
+	db = db.Where("name = ? AND is_del = ?", t.Name, 0)
+	err := db.First(&tag).Error
+	return tag, err
+}
+
 func (t Tag) List(db *gorm.DB, pageOffset, pageSize int) ([]*Tag, error) {
 	var tags []*Tag
 	var err error

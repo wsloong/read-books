@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/wsloong/blog-service/global"
 	"github.com/wsloong/blog-service/internal/service"
 	"github.com/wsloong/blog-service/pkg/app"
@@ -77,6 +78,16 @@ func (t Tag) Create(c *gin.Context) {
 		return
 	}
 	svc := service.New(c.Request.Context())
+
+	if _, err := svc.GetTagByName(param.Name); err != nil && err != gorm.ErrRecordNotFound {
+		global.Logger.Errorf(c, "svc.GetTagByName errs: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetTag)
+		return
+	} else if err == nil {
+		response.ToErrorResponse(errcode.ErrorTagExisted)
+		return
+	}
+
 	if err := svc.CreateTag(&param); err != nil {
 		global.Logger.Errorf(c, "svc.CreateTag error: %v", err)
 		response.ToErrorResponse(errcode.ErrorCreateTag)

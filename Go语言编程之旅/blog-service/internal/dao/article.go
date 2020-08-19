@@ -17,7 +17,7 @@ type Article struct {
 	State         uint8  `json:"state"`
 }
 
-func (d *Dao) CreateArticle(param *Article) (*model.Article, error) {
+func (d *Dao) CreateArticle(param *Article) error {
 	article := model.Article{
 		Title:         param.Title,
 		Desc:          param.Desc,
@@ -26,7 +26,30 @@ func (d *Dao) CreateArticle(param *Article) (*model.Article, error) {
 		State:         param.State,
 		Model:         &model.Model{CreatedBy: param.CreatedBy},
 	}
-	return article.Create(d.engine)
+
+	// 开启事务
+	db := d.engine.Begin()
+
+	// 创建文章记录
+	art, err := article.Create(db)
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+
+	// 创建标签
+	articleTag := model.ArticleTag{
+		Model:     &model.Model{CreatedBy: param.CreatedBy},
+		TagID:     param.TagID,
+		ArticleID: art.ID,
+	}
+
+	if err := articleTag.Create(db); err != nil {
+		db.Rollback()
+		return err
+	}
+	db.Commit()
+	return nil
 }
 
 func (d *Dao) UpdateArticle(param *Article) error {
@@ -53,6 +76,11 @@ func (d *Dao) UpdateArticle(param *Article) error {
 func (d *Dao) GetArticle(id uint32, state uint8) (model.Article, error) {
 	article := model.Article{Model: &model.Model{ID: id}, State: state}
 	return article.Get(d.engine)
+}
+
+func (d *Dao) GetArticleTitle(title string) (model.Article, error) {
+	article := model.Article{Title: title}
+	return article.GetByTitle(d.engine)
 }
 
 func (d *Dao) DeleteArticle(id uint32) error {

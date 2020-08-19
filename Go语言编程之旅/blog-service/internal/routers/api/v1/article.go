@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/wsloong/blog-service/global"
 	"github.com/wsloong/blog-service/internal/service"
 	"github.com/wsloong/blog-service/pkg/app"
@@ -89,6 +90,14 @@ func (a Article) Create(c *gin.Context) {
 	}
 
 	svc := service.New(c.Request.Context())
+	if _, err := svc.GetArticleByName(param.Title); err != nil && err != gorm.ErrRecordNotFound {
+		global.Logger.Errorf(c, "app.GetArticleByName errs: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetArticle)
+		return
+	} else if err == nil {
+		response.ToErrorResponse(errcode.ErrorArticleExistd)
+		return
+	}
 
 	if err := svc.CreateArticle(&param); err != nil {
 		global.Logger.Errorf(c, "svc.CreateArticle err: %v", err)

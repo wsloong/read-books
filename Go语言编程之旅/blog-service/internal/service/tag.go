@@ -41,6 +41,11 @@ func (svc *Service) GetTagList(param *TagListRequest, pager *app.Pager) ([]*mode
 	return svc.dao.GetTagList(param.Name, param.State, pager.Page, pager.PageSize)
 }
 
+func (svc *Service) GetTagByName(name string) (*model.Tag, error) {
+	tag, err := svc.dao.GetTagByName(name)
+	return &tag, err
+}
+
 func (svc *Service) CreateTag(param *CreateTagRequest) error {
 	return svc.dao.CreateTag(param.Name, param.State, param.CreatedBy)
 }

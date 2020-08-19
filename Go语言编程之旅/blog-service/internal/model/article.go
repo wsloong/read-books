@@ -50,6 +50,13 @@ func (a Article) Get(db *gorm.DB) (Article, error) {
 	return article, nil
 }
 
+func (a Article) GetByTitle(db *gorm.DB) (Article, error) {
+	var article Article
+	db = db.Where("title = ? AND is_del = ?", a.Title, 0)
+	err := db.First(&article).Error
+	return article, err
+}
+
 func (a Article) Delete(db *gorm.DB) error {
 	return db.Where("id = ? AND is_del = ?", a.ID, 0).Delete(&a).Error
 }
