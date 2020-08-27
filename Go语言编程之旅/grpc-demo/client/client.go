@@ -16,24 +16,24 @@ func main() {
 	client := pb.NewGreeterClient(conn)
 
 	// Unary Rpc: 一元 RPC的客户端
-	//if err := SayHello(client); err != nil {
-	//	log.Fatalf("SayHello err: %v", err)
-	//}
+	if err := SayHello(client); err != nil {
+		log.Fatalf("SayHello err: %v", err)
+	}
 
 	// Server-side streaming RPC: 服务端流式 RPC
 	//if err := SayList(client, &pb.HelloRequest{Name: "wsl"}); err != nil {
 	//	log.Fatalf("SayList err: %v", err)
 	//}
 
-	// Client-side streaming RPC: 客户端端流式 RPC
-	if err := SayRecord(client, &pb.HelloRequest{Name: "wsl"}); err != nil {
-		log.Fatalf("SayRecord err: %v", err)
-	}
+	//// Client-side streaming RPC: 客户端端流式 RPC
+	//if err := SayRecord(client, &pb.HelloRequest{Name: "wsl"}); err != nil {
+	//	log.Fatalf("SayRecord err: %v", err)
+	//}
 
 	// Bidirectional streaming RPC: 双向流式 RPC
-	if err := SayRoute(client, &pb.HelloRequest{Name:"wsl"}); err != nil {
-		log.Fatalf("SayRoute err: %v", err)
-	}
+	//if err := SayRoute(client, &pb.HelloRequest{Name:"wsl"}); err != nil {
+	//	log.Fatalf("SayRoute err: %v", err)
+	//}
 }
 
 func SayHello(client pb.GreeterClient) error {
