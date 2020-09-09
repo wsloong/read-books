@@ -1,15 +1,16 @@
 package errcode
 
 import (
+	pb "github.com/wsloong/tag-service/proto"
 	//pb "github.com/wsloong/tag-service/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func TogRPCError(err *Error) error {
-	//s, _ := status.New(ToRPCCode(err.Code()), err.Msg()).WithDetails(&pb.Error{Code: int32(err.Code()), Message: err.Msg()})
-	//return s.Err()
-	return err
+	s, _ := status.New(ToRPCCode(err.Code()), err.Msg()).WithDetails(&pb.Error{Code: int32(err.Code()), Message: err.Msg()})
+	return s.Err()
+
 }
 
 func ToRPCCode(code int) codes.Code {
@@ -43,8 +44,7 @@ type Status struct {
 }
 
 func ToRPCStatus(code int, msg string) *Status {
-	//s, _ := status.New(ToRPCCode(code), msg).WithDetails(&pb.Error{Code: int32(code), Message: msg})
-	s := status.New(ToRPCCode(code), msg)
+	s, _ := status.New(ToRPCCode(code), msg).WithDetails(&pb.Error{Code: int32(code), Message: msg})
 	return &Status{s}
 }
 

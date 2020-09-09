@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/wsloong/tag-service/pkg/errcode"
 	"io/ioutil"
 	"net/http"
 )
@@ -55,7 +56,8 @@ func (a *API) GetTagList(ctx context.Context, name string) ([]byte, error) {
 
 	body, err := a.httpGet(ctx, fmt.Sprintf("%s?token=%s&name=%s", "api/v1/tags", token, name))
 	if err != nil {
-		return nil, err
+		return nil, errcode.TogRPCError(errcode.ErrorGetTagListFail)
+		//return nil, err
 	}
 	return body, err
 }

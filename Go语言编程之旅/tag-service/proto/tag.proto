@@ -1,11 +1,26 @@
+// 如果提示  Import "google/api/annotations.proto" was not found or had errors
+// 这需要手动指定 annotations.proto的位置 这里使用了go mod 部署程序；所以路径在
+// $GOPATH/pkg/mod/github.com/grpc-ecosystem/grpc-gateway[@版本号]/third_party/googleapis
+
+// 一：生成 提供 service
+// protoc --go_out=plugins=grpc:. -I=${GOPATH}/src -I $GOPATH/pkg/mod/github.com/grpc-ecosystem/grpc-gateway@v1.14.8/third_party/googleapis -I=. ./proto/*.proto
+
+// 二： 生成 gateway
+// protoc --grpc-gateway_out=logtostderr=true:. -I=${GOPATH}/src -I $GOPATH/pkg/mod/github.com/grpc-ecosystem/grpc-gateway@v1.14.8/third_party/googleapis -I=. ./proto/*.proto
+
 syntax = "proto3";
 
 package proto;
 
 import "proto/common.proto";
+import "google/api/annotations.proto";
 
 service TagService {
-  rpc GetTagList(GetTagListRequest) returns (GetTagListReply) {}
+  rpc GetTagList(GetTagListRequest) returns (GetTagListReply) {
+    option (google.api.http) = {
+      get: "/api/v1/tags"
+    };
+  }
 }
 
 message GetTagListRequest {

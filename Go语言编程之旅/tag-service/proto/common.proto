@@ -1,10 +1,20 @@
+// 如果提示 Import "google/protobuf/xxx.proto" was not found or had errors.
+// 下载  https://github.com/protocolbuffers/protobuf ， 将 src/google 移动到 $GOPATH/src
+// 然后  protoc --go_out=plugins=grpc:. -I=${GOPATH}/src -I=. ./proto/*.proto
 syntax = "proto3";
 
-package proto;
+import "google/protobuf/any.proto";
 
+package proto;
 
 message Pager {
   int64 page = 1;
   int64 page_size = 2;
   int64 total_rows = 3;
+}
+
+message Error {
+  int32 code = 1;
+  string message = 2;
+  google.protobuf.Any detail = 3;
 }
