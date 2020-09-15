@@ -3,6 +3,8 @@ module github.com/wsloong/tag-service
 go 1.14
 
 require (
+	github.com/elazarl/go-bindata-assetfs v1.0.1 // indirect
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/grpc-ecosystem/grpc-gateway v1.14.8
 	github.com/soheilhy/cmux v0.1.4 // indirect

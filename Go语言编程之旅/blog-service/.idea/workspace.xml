@@ -2,29 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ef43b000-3c90-4af9-ab0c-b386c8a0ae39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/dao/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/middleware/middleware.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/model/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/routers/api/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/routers/api/upload.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/service/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/service/upload.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/app/jwt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/upload/file.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/util/md5.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/blog-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/blog-service.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/blog.sql" beforeDir="false" afterPath="$PROJECT_DIR$/docs/blog.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global/setting.go" beforeDir="false" afterPath="$PROJECT_DIR$/global/setting.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/routers/api/v1/tag.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/api/v1/tag.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routers/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/errcode/common_code.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/errcode/common_code.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/setting/section.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/setting/section.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/storage/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/pkg/bapi/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/pkg/bapi/api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/pkg/errcode/rpc_error.go" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/pkg/errcode/rpc_error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/proto/common.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/proto/common.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/proto/common.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/proto/common.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tag-service/proto/tag.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/../tag-service/proto/tag.pb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
